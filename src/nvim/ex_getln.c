@@ -2164,10 +2164,15 @@ getexline (
     int indent                     /* indent for inside conditionals */
 )
 {
+  struct cmdline_info save_ccline;
   /* When executing a register, remove ':' that's in front of each line. */
   if (exec_from_reg && vpeekc() == ':')
     (void)vgetc();
-  return getcmdline(c, 1L, indent);
+  save_cmdline(&save_ccline);
+  char_u *ret = getcmdline(c, 1L, indent);
+  restore_cmdline(&save_ccline);
+
+  return ret;
 }
 
 /*
